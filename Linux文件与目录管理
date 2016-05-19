@@ -1,0 +1,27 @@
+---
+title: Linux文件与目录管理
+tags: Linux学习笔记
+grammar_cjkRuby: true
+---
+
+
+### (一) 目录与路径
+#### 1.相对路径与绝对路径
+* 绝对路径:路径的写法一定由根目录/写起.
+* 相对路径:路径的写法不是由/写起,相对路径相对于目前工作目录的路径.
+#### 2. 目录的相关操作
+* cd : 切换目录
+cd是change directory的缩写,这是用来切换工作目录的命令.
+* pwd : 显示当前目录
+pwd是print woking directory的缩写,也就是显示目前所在目录的命令.
+其实有趣的是哪个-P的参数.它可以让我们去的正确的目录名称,而不是以连接文件的路径来显示的.
+```bash
+# cd /var/mail
+# pwd
+/var/mail
+# pwd -P
+/var/spool/mail
+```
+* mkdir : 新建一个新的目录
+
+* rmdir : 删除一个空的目录

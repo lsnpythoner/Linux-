@@ -1,7 +1,35 @@
 ---
 title: Linux文件与目录管理
 tags: Linux学习笔记
+grammar_abbr: true
+grammar_table: true
+grammar_defList: true
+grammar_emoji: true
+grammar_footnote: true
+grammar_ins: true
+grammar_mark: true
+grammar_sub: true
+grammar_sup: true
+grammar_checkbox: true
+grammar_mathjax: true
+grammar_flow: true
+grammar_sequence: true
+grammar_plot: true
+grammar_code: true
+grammar_highlight: true
+grammar_html: true
+grammar_linkify: true
+grammar_typographer: true
+grammar_video: true
+grammar_audio: true
+grammar_attachment: true
+grammar_mermaid: true
+grammar_classy: true
+grammar_cjkEmphasis: true
 grammar_cjkRuby: true
+grammar_center: true
+grammar_align: true
+grammar_tableExtra: true
 ---
 
 
@@ -15,7 +43,7 @@ cd是change directory的缩写,这是用来切换工作目录的命令.
 * pwd : 显示当前目录
 pwd是print woking directory的缩写,也就是显示目前所在目录的命令.
 其实有趣的是哪个-P的参数.它可以让我们去的正确的目录名称,而不是以连接文件的路径来显示的.
-```bash
+```bash?linenums
 # cd /var/mail
 # pwd
 /var/mail
@@ -23,5 +51,79 @@ pwd是print woking directory的缩写,也就是显示目前所在目录的命令
 /var/spool/mail
 ```
 * mkdir : 新建一个新的目录
-
+```bash?linenums
+#mkdir [-mp] 目录名称
+参数:
+-m:配置文件案的权限.直接设置,不需要看默认权限(umask)
+-p:帮助你直接将所需要的目录(包含上层目录)低谷爱创建起来.
+#参数范例
+# mkdir -p test1/test2/test3/test4>>== "-p参数,系统自动帮你创建不存在的目录,如果该目录本来就已经存在时,系统也不会显示错误信息."==<<
+# mkdir -m 711 test2 >>=="使用-m给予新的目录权限,默认去哪先跟umask有关"==<<
+```
 * rmdir : 删除一个空的目录
+该rmdir命令仅仅能`"删除空的目录"`
+#### 3.关于执行文件路径的变量: $PATH
+PATH(一定是大写)这个变量的内容是由一堆目录所组成的,每个目录中间用冒号( : )来隔开,每个目录是有"顺序"之分的.
+* 不同身份用户默认的PATH不同,默认能够随意执行的命令也不同(如root与其他用户)
+* PATH是可以修改 ,所以一般用户还是可以通过修改PATH来执行某些位于/sbin或者/usr/sbin下的命令来查询;
+* 使用绝对路径或相对路径直接指定某个命令的文件名来执行,会比查询PATH来的正确.
+* 命令应该要放置到正确的目录下,执行才会比较方便
+* 本目录( . )最好不要放到PATH当中.
+
+### (二)文件与目录管理
+#### 1.查看文件与目录:ls
+
+> ls的参数说明 :
+> ++-a : 全部的文件,连同隐藏文件(开头为 . 的文件)一起列出来(常用)++
+>  -A : 列出全部的文件(连同隐藏文件,但不包括 . 与 .. 这两个目录)
+> ++-d : 仅列出目录本身,而不是列出目录内的文件数据(常用)++
+> -f : 直接勒出结构,而不进行排序(ls默认会以文件名排序)
+> -F : 根据文件,目录等信息给予附加数据结构,例如:
+>	*: 代表可执行文件 ; / : 代表目录 ; = : 代表socket文件, | :代表FIFO文件
+>	-h : 将文件容量以人类较易读的方式(例如:GB,KB等)列出来
+>	-i  列出inode号码.
+>	++-l : 列出长数据串,包含文件的属性与权限等数据(常用)++
+>	-n : 列出UID与GID,而非用户与用户组的名称
+>	-r : 将排序结果反向输出,例如: 原本文件名由小到大,反向则为由大到小.
+>	-R : 连同子目录内容一起列出来,等于该目录下的所有文件都会显示出来
+>	-S : 以文件容量大小排序,而不是用文件名排序.
+>	-t : 依时间排序,而不是用文件名
+>	--color=never : 不要依据文件特征给予颜色显示
+>	--color=always : 显示颜色
+>	--color=auto : 让系统执行依据设置来判断是否给予颜色
+>	--full-time : 以完整时间模式输出
+>	--time=(atime,ctime):输出访问时间或改变权限属性时间(ctime),而非内容更改时间(modification time)
+
+ls最长被使用到的功能还是那个-l的参数,系统默认将ll(L的小写)设置成为ls -l的意思了.
+#### 2.复制,删除与移动:cp,rm,mv
+1. cp : 命令除了单纯复制之外,还可以创建连接文件(就是快捷方式),对比两个文件的新旧而予以更新,以及复制整个目录等的功能.
+>>参数说明:
+> > ++-a : 相当于 -pdr 的意思(常用)++
+> > -d  : 若源文件为连接文件的属性(link file),则复制连接文件属性而非文件本身.
+> > -f : 为强制(force)的意思,若目标文件已经存在且无法开启,则删除后在尝试一次.
+> > ++-i : 若目标文件(destination)已经存在时,在覆盖时会先询问操作的进行(常用)++
+> > -l : 进行硬连接(hard link)的连接文件创建,而非复制文件本身;
+> > -p : 连同文件的属性一起复制过去,而非使用默认属性(备份常用)
+> > ++-r : 递归持续复制,用于目录的复制行为(常用)++
+> > -s : 复制成为符号连接文件(symbolic link),即"快捷方式"文件
+> > -u 若destination比source久才更新destination.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
